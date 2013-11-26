@@ -2037,6 +2037,9 @@ void Boss::update()
 		if (frame - beginFrame > 90)
 			state = SEQUENCE;
 	}
+	
+	if(firing)
+		fireball.update();
 
 	if (health <= 0)
 	{
