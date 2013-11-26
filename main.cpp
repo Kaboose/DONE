@@ -3227,6 +3227,9 @@ void AIManager::addAI(int x, int y, AI::types type)
 	case LEVEL_THREE:
 		bots.push_back(AI(x, y, wizard_texture, AI::WIZARD, wind_script));
 		break;
+	case LEVEL_FOUR:
+		bots.push_back(AI(x, y, wizard_texture, AI::WIZARD, ice_script));
+		break;
 	}
 
 	current_AI++;
@@ -3704,8 +3707,18 @@ private:
 	int levelthree_level_height;
 	int levelthree_level_size;
 	SDL_Texture *levelthree_level_background[2];
-	Tile *levelthree_level[3540];
-	textures levelthree_level_blueprint[3120];
+	Tile *levelthree_level[1200];
+	textures levelthree_level_blueprint[1200];
+
+	//Level Three - Ice
+	int levelfour_texelw;
+	int levelfour_texelh;
+	int levelfour_level_width;
+	int levelfour_level_height;
+	int levelfour_level_size;
+	SDL_Texture *levelfour_level_background[2];
+	Tile *levelfour_level[3120];
+	textures levelfour_level_blueprint[3120];
 
 #pragma region Textures
 	//Textures
@@ -3807,6 +3820,7 @@ private:
 	SDL_Texture *far_background;
 	SDL_Texture *fire_background;
 	SDL_Texture *air_background;
+	SDL_Texture *ice_background;
 	SDL_Texture *flare;
 	SDL_Texture *grass;
 	SDL_Texture *near_background;
@@ -3922,6 +3936,7 @@ void LevelManager::loadTextures()
 	far_background = loadImage("Media/Other/Far Background.png");
 	fire_background = loadImage("Media/Other/fire background.png");
 	air_background = loadImage("Media/Other/air background.png");
+	ice_background = loadImage("Media/Other/ice background.png");
 	flare = loadImage("Media/Other/Flare.png");
 	grass = loadImage("Media/Other/Grass.png");
 	near_background = loadImage("Media/Other/Near Background.png");
@@ -3996,12 +4011,22 @@ void LevelManager::initializeLevels()
 	//level three - air
 	levelthree_texelw = 40;
 	levelthree_texelh = 40;
-	levelthree_level_width = 260;
+	levelthree_level_width = 100;
 	levelthree_level_height = 12;
 	levelthree_level_size = levelthree_level_width*levelthree_level_height;
 	levelthree_level_background[0] = air_background;
 	levelthree_level_background[1] = NULL;
 	loadLevelFromText("Media/Levels/levelthree.txt", LEVEL_THREE);
+
+	//level four - ice
+	levelfour_texelw = 40;
+	levelfour_texelh = 40;
+	levelfour_level_width = 260;
+	levelfour_level_height = 12;
+	levelfour_level_size = levelthree_level_width*levelthree_level_height;
+	levelfour_level_background[0] = ice_background;
+	levelfour_level_background[1] = NULL;
+	loadLevelFromText("Media/Levels/levelfour.txt", LEVEL_FOUR);
 
 	//main menu
 	levelmenu_texelw = 40;
@@ -4081,6 +4106,20 @@ void LevelManager::loadLevel(level_type level)
 		LevelHeight = levelthree_level_height*home_texelh;
 		LevelSize = levelthree_level_width*home_level_height;
 		Background = levelthree_level_background;
+		music = Mix_LoadMUS( "Media/Music/level_one.wav" );
+		Mix_PlayMusic(music, -1);
+		break;
+
+	case LEVEL_FOUR:
+		buildLevel(levelfour_level_blueprint, levelfour_level, levelfour_level_height, levelfour_level_width, levelfour_texelw, levelfour_texelh);
+
+		CurrentLevel = levelfour_level;
+		texel_width = levelfour_texelw;
+		texel_height = levelfour_texelh;
+		LevelWidth = levelfour_level_width*home_texelw;
+		LevelHeight = levelfour_level_height*home_texelh;
+		LevelSize = levelfour_level_width*home_level_height;
+		Background = levelfour_level_background;
 		music = Mix_LoadMUS( "Media/Music/level_four.wav" );
 		Mix_PlayMusic(music, -1);
 		break;
@@ -4505,6 +4544,8 @@ void LevelManager::loadLevelFromText(std::string filename, level_type level)
 				leveltwo_level_blueprint[numberOfTiles] = stringToEnum(tempEnum);
 			else if (level == LEVEL_THREE)
 				levelthree_level_blueprint[numberOfTiles] = stringToEnum(tempEnum);
+			else if (level == LEVEL_FOUR)
+				levelfour_level_blueprint[numberOfTiles] = stringToEnum(tempEnum);
 			else if (level == MENU_LEVEL)
 				levelmenu_level_blueprint[numberOfTiles] = stringToEnum(tempEnum);
 			tempEnum = "";
