@@ -1960,7 +1960,7 @@ Boss::Boss(SDL_Texture *texture, int x, int y, types type) : Enemy(texture, x, y
 	
 		box.w = 2*50;
 		box.h = 2*50;
-		box.y = y-10;
+		box.y = y - (box.h - 45);
 
 		currentClip = 1;
 
@@ -1989,7 +1989,7 @@ Boss::Boss(SDL_Texture *texture, int x, int y, types type) : Enemy(texture, x, y
 	
 		box.w = 2*100;
 		box.h = 2*80;
-		box.y = y-100;
+		box.y = y - (box.h - 45);
 
 		currentClip = 0;
 	}
